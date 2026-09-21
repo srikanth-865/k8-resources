@@ -2,10 +2,10 @@ apiVersion: v1 #telling to Kubernetes: "Use the v1 API format to create this res
 kind: Namespace #It tells Kubernetes what type of resource you want to create.and you select the resource is a Namespace so we gave roboshop is namesapce
 metadata: #Contains information that identifies and describes the Kubernetes resource.
  name: roboshop #name of the namespace will be roboshop.
-labels:
- project: roboshop
- environment: dev
- purpose: poc
+ labels:
+  project: roboshop
+  environment: dev
+  purpose: poc
  
 
  ##finally A Namespace creates a logical workspace for organizing Kubernetes resources.
