@@ -16,4 +16,4 @@ labels:
 #  pod             Run containers
 #  Deployment     Manage application replicas
 #  Service       Provide network access
-#  ConfigMap      Store configuration
+#  ConfigMap      Store configuration 
