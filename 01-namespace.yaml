@@ -17,5 +17,3 @@ labels:
 #  Deployment     Manage application replicas
 #  Service       Provide network access
 #  ConfigMap      Store configuration
-
-	
