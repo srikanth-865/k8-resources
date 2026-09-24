@@ -16,4 +16,4 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-    nodeport: 30007 #we assign our required node value
+    nodePort: 30007 #we assign our required node value
