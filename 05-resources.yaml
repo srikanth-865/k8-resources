@@ -6,10 +6,20 @@ spec:
  containers:
  - name: nginx
    image: nginx
-   resources:
+   resources: # resource  are inside of container as we use nginx image we should limit their resource using by limitng 
       requests:
         memory: "128Mi"
         cpu: "100m"
       limits:
         memory: "256Mi"
         cpu: "150m"
+
+    
+
+    # For both CPU and memory, you can configure two settings:
+
+    # Requests: 
+    # The minimum amount of resources guaranteed to the workload. Kubernetes uses this value to decide which node has enough room to host the Pod.
+
+    # Limits: The maximum amount of resources a workload is allowed to consume. 
+    # This prevents a single misbehaving application from exhausting all the resources on a node and starving neighboring workloads
