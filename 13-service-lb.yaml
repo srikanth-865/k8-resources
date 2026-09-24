@@ -6,7 +6,7 @@ metadata:
     project: roboshop
     environment: dev
 spec:
- type: NodePort #by giving this nodeport we get random ephemeral value
+ type: Loadbalancer
  selector:
    project: roboshop
    tier: frontend
@@ -16,3 +16,4 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+    nodeport: 30007 #we assign our required node value
