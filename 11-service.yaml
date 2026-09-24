@@ -2,12 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx
+  labels:
+    project: roboshop
+    environment: dev
 spec:
  selector:
    project: roboshop
    tier: frontend
    component: frontend
  ports:
- - protocol: Tcp
-   port: 80
-   targetport: 80
+  - protocol: Tcp
+    port: 80
+    targetport: 80
