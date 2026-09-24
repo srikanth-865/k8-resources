@@ -7,7 +7,7 @@ spec:
    project: roboshop
    tier: frontend
    component: frontend
-   port:
+ ports:
    - protocol: Tcp
      port: 80
      targetport: 80
