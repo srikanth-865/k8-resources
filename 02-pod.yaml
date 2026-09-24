@@ -10,3 +10,6 @@ spec: #as i used pod nginx i want to run
  containers: #its for running of container  nginx
   - name: nginx  #container name
     image: nginx  #for running contianer we need image it will take by docker hub
+
+  
+
