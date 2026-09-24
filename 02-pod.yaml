@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Pod #for run container
 metadata:
-  name: nginx  #pod name is nginx
+  name: nginx  #for pod name is nginx
   labels:
    project: roboshop
    environment: dev
    purpose: poc
-spec: #as i used pod nginx i want to run 
+spec: #as i used pod nginx i want to run spec is used for your pod resource what should i do so we give containers 
  containers: #its for running of container  nginx
   - name: nginx  #container name
     image: nginx  #for running contianer we need image it will take by docker hub

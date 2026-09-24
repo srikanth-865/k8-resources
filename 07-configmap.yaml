@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata: 
   name: nginx-config # we use nginx-config name for this ConfigMap 
-data: #here we are just intializing the env values 
+data: #here we are just intializing the env values here nginx-config 
    project: roboshop
    course: kubernates
    person: srikanth
