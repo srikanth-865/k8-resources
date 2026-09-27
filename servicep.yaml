@@ -26,4 +26,45 @@ spec:
   - name: nginx
     image: nginx
 
+##Both  ip  are matched  
+##                          Endpoints:                192.168.51.173:80 
+##    nginx-sk   1/1     Running   0          5m16s   192.168.51.173
+
+/*3.239.39.87 | 172.31.2.126 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl get svc source-nginx
+NAME           TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+source-nginx   ClusterIP   10.100.8.58   <none>        80/TCP    24s
+
+3.239.39.87 | 172.31.2.126 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl get pod nginx-sk
+NAME       READY   STATUS    RESTARTS   AGE
+nginx-sk   1/1     Running   0          5m11s
+
+3.239.39.87 | 172.31.2.126 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl get pod nginx-sk -o wide
+NAME       READY   STATUS    RESTARTS   AGE     IP               NODE                             NOMINATED NODE   READINESS GATES
+nginx-sk   1/1     Running   0          5m16s   192.168.51.173   ip-192-168-35-253.ec2.internal   <none>           <none>
+
+3.239.39.87 | 172.31.2.126 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl describe svc source-nginx
+Name:                     source-nginx
+Namespace:                default
+Labels:                   <none>
+Annotations:              <none>
+Selector:                 course=devops,from=kurnool,name=srikanth
+Type:                     ClusterIP
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.100.8.58
+IPs:                      10.100.8.58
+Port:                     <unset>  80/TCP
+TargetPort:               80/TCP
+Endpoints:                192.168.51.173:80
+Session Affinity:         None
+Internal Traffic Policy:  Cluster
+Events:                   <none>
+
+3.239.39.87 | 172.31.2.126 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$  */
+
 
