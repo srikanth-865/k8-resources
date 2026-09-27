@@ -12,11 +12,8 @@ spec:
       image: nginx
 
 
-
-
       ##################  we can get labels like this in cli
-
-[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl get pods --show-labels
+#[ ec2-user@ip-172-31-2-126 ~/k8-resources ]$ kubectl get pods --show-labels
 #NAME              READY   STATUS             RESTARTS      AGE     LABELS
 #labels            1/1     Running            0             2m39s   environment=dev,project=roboshop,purpose=poc
 #multi-container   1/2     CrashLoopBackOff   4 (49s ago)   7m18s   environment=dev,project=roboshop,purpose=poc
