@@ -6,20 +6,24 @@ metadata:
     project: roboshop
     environment: dev
 spec:
+#service use selector to use this labels and finding like thes labels in the pods
  selector:
    project: roboshop
    tier: frontend
    component: frontend
    environment: dev
+   #targetPort → the port where the application inside the Pod/container is listening.
+ 
  ports:
   - protocol: TCP
-    port: 80
-    targetPort: 80
+    port: 80  #he port where the Service accepts traffic from user
+    targetPort: 80 #    target port is used for listening inside the container service port for listening user traffic
 ---
 apiVersion: v1
 kind: Pod
 metadata:
   name: nginx # pod name
+  # so here source selector labels matching this labels and using this pod
   labels:
     project: roboshop
     environment: dev
@@ -29,3 +33,71 @@ spec:
   containers:
   - name: nginx # container name
     image: nginx # by default it will get from docker hub
+
+
+/*You can check whether the Service has selected your Pod in a few easy ways.
+
+1. Check the Service
+
+Run:
+
+kubectl get service nginx
+
+Then check its details:
+
+kubectl describe service nginx
+
+Look for:
+
+Selector:        component=frontend,environment=dev,project=roboshop,tier=frontend
+Endpoints:       10.x.x.x:80
+2. The most important part: Endpoints
+
+If you see something like:
+
+Endpoints: 10.0.2.15:80
+
+✅ The Service has successfully selected the Pod.
+
+If you see:
+
+Endpoints: <none>
+
+❌ The Service has not found any matching Pod.
+
+3. Check your Pod IP
+
+Run:
+
+kubectl get pod -o wide
+
+You might see:
+
+NAME    READY   STATUS    IP            NODE
+nginx   1/1     Running   10.0.2.15     node-1
+
+Then:
+
+kubectl describe service nginx
+
+If the endpoint is:
+
+Endpoints: 10.0.2.15:80
+
+the IP matches your Pod's IP:
+
+Pod IP       = 10.0.2.15
+Endpoint     = 10.0.2.15:80
+                  ↑
+             Service selected it
+⭐ Easy command to remember
+kubectl describe service nginx
+
+Then check:
+
+Selector:
+Endpoints:
+
+Selector = which Pods the Service is looking for.
+Endpoints = the Pods it actually found. */
+

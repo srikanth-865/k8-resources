@@ -15,9 +15,10 @@ spec:
       project: roboshop
       tier: frontend
       component: frontend
-  # pod definition
+  # pod definition here
   template:
     metadata:
+    #matching the replicaset selector labels here pod
       labels:
         project: roboshop
         tier: frontend

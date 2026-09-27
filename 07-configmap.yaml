@@ -1,3 +1,4 @@
+#3By this config map key&Values we can take everywhere by refere through   configMapRef: name: nginx-config
 apiVersion: v1
 kind: ConfigMap
 metadata: 

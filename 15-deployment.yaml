@@ -10,14 +10,14 @@ metadata:
     purpose: deployment
 spec:
   replicas: 3
-  selector:
+  selector:  #Tells the Deployment controller which Pods to manage (matching the labels).
     matchLabels:
       project: roboshop
       tier: frontend
       component: frontend
       purpose: deployment
-  # Pod
-  template:
+  # Pod defination
+  template:  #The blueprint used to create new Pods, defining the container name, image, and ports.
     metadata:
       labels:
         project: roboshop
@@ -31,6 +31,7 @@ spec:
         ports:
         - containerPort: 80
 ---
+#service file which is used to for connecting pods and also The Service provides networking to those Pods:
 apiVersion: v1
 kind: Service
 metadata:

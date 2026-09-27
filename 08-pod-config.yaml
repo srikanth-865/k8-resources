@@ -9,3 +9,4 @@ spec:
     envFrom:  #whatever values we gave in nginx-config here we are using for our nginx container environment values
     - configMapRef:
          name: nginx-config
+
