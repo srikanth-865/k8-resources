@@ -8,10 +8,14 @@ metadata:
 spec:
  type: LoadBalancer
  selector:
+  #  project: roboshop
+  #  tier: frontend
+  #  component: frontend
+  #  environment: dev
+
    project: roboshop
-   tier: frontend
-   component: frontend
    environment: dev
+   purpose: poc
  ports:
   - protocol: TCP
     port: 80
