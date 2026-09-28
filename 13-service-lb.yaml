@@ -16,3 +16,78 @@ spec:
     port: 80
     targetPort: 80
     nodePort: 30007 #we assign our required node value
+
+
+
+# The traffic flow
+
+# First, the Service uses the selector to find matching Pods:
+
+# Service
+#   │
+#   │ selector:
+#   │ project=roboshop
+#   │ environment=dev
+#   │ purpose=poc
+#   ▼
+# Matching Pod
+
+# Then because it is a LoadBalancer Service, AWS provides an external Load Balancer.
+
+# The traffic flow is roughly:
+
+# User
+#   │
+#   │ HTTP :80
+#   ▼
+# AWS Load Balancer
+#   │
+#   │ forwards to Service/Nodes
+#   ▼
+# NodePort :30007
+#   │
+#   │ forwards to targetPort :80
+#   ▼
+# nginx Pod
+#   │
+#   ▼
+# nginx container :80
+# What your three ports mean
+# port: 80
+
+# ➡️ Service port — Service accepts traffic on port 80.
+
+# targetPort: 80
+
+# ➡️ Container/application port — traffic ultimately goes to nginx on port 80.
+
+# nodePort: 30007
+
+# ➡️ Node port — Kubernetes exposes the Service on port 30007 on the worker nodes.
+
+# About your Security Group
+
+# If you want to directly access the NodePort, for example:
+
+# http://<EC2-worker-node-IP>:30007
+
+# then the worker nodes' Security Group needs to allow inbound TCP 30007 from the source you want.
+
+# For example:
+
+# Type: Custom TCP
+# Port: 30007
+# Source: 0.0.0.0/0
+
+# But if you're accessing the application through the AWS Load Balancer, you normally access the Load Balancer's DNS name on port 80, not :30007.
+
+# So don't think:
+
+# "LoadBalancer means user must use 30007."
+
+# Instead:
+
+# LoadBalancer = external entry point
+# NodePort = internal node-level port used by the Service
+
+# And one more thing: nodePort: 30007 is valid because Kubernetes NodePorts normally use the 30000–32767 range.

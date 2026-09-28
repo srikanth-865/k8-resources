@@ -27,3 +27,15 @@ spec:
       containers:
       - name: nginx
         image: nginx
+
+################## OUTPUTS    #########
+# NAME             READY   STATUS    RESTARTS   AGE
+# frontend-gdb96   1/1     Running   0          2m2s
+# frontend-tt82x   1/1     Running   0          2m2s
+# frontend-wthj2   1/1     Running   0          2m2s
+
+
+# frontend (Replicaset Name) - gdb96(Pod name randomly generated)
+
+
+  
