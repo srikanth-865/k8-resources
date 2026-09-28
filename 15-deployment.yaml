@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx
+        image: nginx:latest
         ports:
         - containerPort: 80
 ---
@@ -53,3 +53,17 @@ spec:
     - protocol: TCP
       port: 80 # service port
       targetPort: 80 # container port
+
+
+#### OUTPUT ######################
+# NAME                     READY   STATUS    RESTARTS   AGE
+# nginx-596895cffc-88p6b   1/1     Running   0          64s
+# nginx-596895cffc-g9mtc   1/1     Running   0          66s
+# nginx-596895cffc-q6xxb   1/1     Running   0          65s
+
+
+# nginx       - 596895cffc       - 88p6b
+#   │                │                │
+#   │                │                └── Pod-specific ID
+#   │                └── ReplicaSet ID
+#   └── Deployment name
