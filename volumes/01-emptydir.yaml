@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx    #it creates Pod
+spec:
+  containers:  ##Inside this Pod, you have two containers.
+  - image: nginx
+    name: nginx
+    volumeMounts:
+    - mountPath: /var/log/nginx  ## Mount the nginx-logs volume inside the Nginx container at /var/log/nginx
+      name: nginx-logs
+  - image: almalinux:9
+    name: almalinux
+    command: ["sleep", "1000"]
+    volumeMounts:
+    - mountPath: /mnt/nginx-logs  ##AlmaLinux can read those same files because it has the same emptyDir mounted there.
+      name: nginx-logs
+      readOnly: true
+  volumes:
+  - name: nginx-logs
+    # this creates intially empty directory in the node where pod scheduled
+    emptyDir:  
+      sizeLimit: 500Mi
+
+
+  ##########
+
+#   emptyDir in Kubernetes
+# emptyDir is a temporary storage area created inside a Pod
+
+# If the container restarts, the emptyDir data normally remains because the Pod still exists.
+# But if the Pod is deleted, the emptyDir data is deleted
+
+
+# Here is the whole flow:
+
+#                          POD: nginx
+#                     ┌───────────────────┐
+#                     │                   │
+#                     │  Nginx Container  │
+#                     │                   │
+#                     │ /var/log/nginx    │
+#                     │      │            │
+#                     │      │ writes     │
+#                     └──────┼────────────┘
+#                            │
+#                            ↓
+#                   ┌─────────────────┐
+#                   │    emptyDir     │
+#                   │                 │
+#                   │ nginx-logs      │
+#                   │                 │
+#                   │ access.log      │
+#                   │ error.log       │
+#                   └────────┬────────┘
+#                            │
+#                            │ same volume
+#                            ↓
+#                   ┌────────────────────┐
+#                   │ AlmaLinux Container│
+#                   │                    │
+#                   │ /mnt/nginx-logs    │
+#                   │                    │
+#                   │ reads logs 👀      │
+#                   └────────────────────┘
+# Your YAML connection
+
+# First, you create the volume:
+
+# volumes:
+# - name: nginx-logs
+#   emptyDir:
+#     sizeLimit: 500Mi
+
+# This means:
+
+# Create a temporary storage area called nginx-logs.
+
+# Then Nginx mounts it
+# volumeMounts:
+# - mountPath: /var/log/nginx
+#   name: nginx-logs
+
+# This means:
+
+# Inside the Nginx container, make the nginx-logs volume available at /var/log/nginx.
+
+# Nginx writes:
+
+# /var/log/nginx/access.log
+# /var/log/nginx/error.log
+
+# Those files are actually going into the emptyDir storage.
+
+# Then AlmaLinux mounts the SAME volume
+# volumeMounts:
+# - mountPath: /mnt/nginx-logs
+#   name: nginx-logs
+#   readOnly: true
+
+# This means:
+
+# Take the same nginx-logs volume and make it available inside AlmaLinux at /mnt/nginx-logs.
+
+# So AlmaLinux can do:
+
+# ls /mnt/nginx-logs
+
+# and see:
+
+# access.log
+# error.log
+# The most important concept 🧠
+
+# The paths are different:
+
+# Nginx:
+#  /var/log/nginx
+
+# AlmaLinux:
+#  /mnt/nginx-logs
+
+# But they point to the same emptyDir volume:
+
+#                  SAME STORAGE
+#                      ↓
+#                 emptyDir
+#                      │
+#           ┌──────────┴──────────┐
+#           ↓                     ↓
+#  /var/log/nginx          /mnt/nginx-logs
+#  Nginx container          AlmaLinux container
+#       WRITE 📝                 READ 👀
+
+# So remember:
+
+# mountPath = where the volume appears inside that container.
+# name: nginx-logs = which volume to use.
+# emptyDir = the actual temporary shared storage.
+
+# And because AlmaLinux has readOnly: true, it can read the logs but cannot write to that mounted volume.
