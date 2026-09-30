@@ -25,11 +25,11 @@ spec:
 
   ##########
 
-#   emptyDir in Kubernetes
+#  emptyDir in Kubernetes
 # emptyDir is a temporary storage area created inside a Pod
 
 # If the container restarts, the emptyDir data normally remains because the Pod still exists.
-# But if the Pod is deleted, the emptyDir data is deleted
+# But if the Pod is deleted, the emptyDir data is deleted *****
 
 
 # Here is the whole flow:
@@ -139,3 +139,56 @@ spec:
 # emptyDir = the actual temporary shared storage.
 
 # And because AlmaLinux has readOnly: true, it can read the logs but cannot write to that mounted volume.
+
+
+##   i restarted the contaienr so volume inside data is safe not deleted
+# 54.175.18.251 | 172.31.27.96 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-27-96 ~/k8-resources/volumes ]$ kubectl exec -it nginx -c nginx -- nginx -s stop
+
+# 54.175.18.251 | 172.31.27.96 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-27-96 ~/k8-resources/volumes ]$ kubectl get pod nginx
+# NAME    READY   STATUS    RESTARTS     AGE
+# nginx   2/2     Running   1 (7s ago)   13m
+
+# 54.175.18.251 | 172.31.27.96 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-27-96 ~/k8-resources/volumes ]$ kubectl get pod nginx
+# NAME    READY   STATUS    RESTARTS      AGE
+# nginx   2/2     Running   1 (10s ago)   13m
+
+# 54.175.18.251 | 172.31.27.96 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-27-96 ~/k8-resources/volumes ]$ kubectl exec -it nginx -c nginx -- ls -l /var/log/nginx
+# total 4
+# -rw-r--r--. 1 root root    0 Sep 30 02:08 access.log
+# -rw-r--r--. 1 root root 1776 Sep 30 02:21 error.log
+
+# 54.175.18.251 | 172.31.27.96 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-27-96 ~/k8-resources/volumes ]$ kubectl exec -it nginx -c nginx -- cat /var/log/nginx/error.log
+# 2026/09/30 02:08:20 [notice] 1#1: using the "epoll" event method
+# 2026/09/30 02:08:20 [notice] 1#1: nginx/1.31.6
+# 2026/09/30 02:08:20 [notice] 1#1: built by gcc 14.2.0 (Debian 14.2.0-19)
+# 2026/09/30 02:08:20 [notice] 1#1: OS: Linux 6.12.103-129.197.amzn2023.x86_64
+# 2026/09/30 02:08:20 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 65536:1048576
+# 2026/09/30 02:08:20 [notice] 1#1: start worker processes
+# 2026/09/30 02:08:20 [notice] 1#1: start worker process 29
+# 2026/09/30 02:08:20 [notice] 1#1: start worker process 30
+# 2026/09/30 02:21:25 [notice] 50#50: signal process started
+# 2026/09/30 02:21:25 [notice] 1#1: signal 15 (SIGTERM) received from 50, exiting
+# 2026/09/30 02:21:25 [notice] 29#29: exiting
+# 2026/09/30 02:21:25 [notice] 30#30: exiting
+# 2026/09/30 02:21:25 [notice] 29#29: exit
+# 2026/09/30 02:21:25 [notice] 30#30: exit
+# 2026/09/30 02:21:25 [notice] 1#1: signal 14 (SIGALRM) received
+# 2026/09/30 02:21:25 [notice] 1#1: signal 17 (SIGCHLD) received from 30
+# 2026/09/30 02:21:25 [notice] 1#1: worker process 30 exited with code 0
+# 2026/09/30 02:21:25 [notice] 1#1: signal 29 (SIGIO) received
+# 2026/09/30 02:21:25 [notice] 1#1: signal 17 (SIGCHLD) received from 29
+# 2026/09/30 02:21:25 [notice] 1#1: worker process 29 exited with code 0
+# 2026/09/30 02:21:25 [notice] 1#1: exit
+# 2026/09/30 02:21:26 [notice] 1#1: using the "epoll" event method
+# 2026/09/30 02:21:26 [notice] 1#1: nginx/1.31.6
+# 2026/09/30 02:21:26 [notice] 1#1: built by gcc 14.2.0 (Debian 14.2.0-19)
+# 2026/09/30 02:21:26 [notice] 1#1: OS: Linux 6.12.103-129.197.amzn2023.x86_64
+# 2026/09/30 02:21:26 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 65536:1048576
+# 2026/09/30 02:21:26 [notice] 1#1: start worker processes
+# 2026/09/30 02:21:26 [notice] 1#1: start worker process 29
+# 2026/09/30 02:21:26 [notice] 1#1: start worker process 30

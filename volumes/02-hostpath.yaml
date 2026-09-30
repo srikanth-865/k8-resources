@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet #one Pod running on every node."
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system # admin namespace
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch  
+      ##pod defination 
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      containers:
+      - name: fluentd-elasticsearch   #Fluentd collects/forwards logs to a centralized logging system.
+        image: quay.io/fluentd_elasticsearch/fluentd:v5.0.1
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:  #Take the var/log volume and make it available inside the Fluentd container at /var/log
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+      volumes:
+      - name: varlog
+        hostPath: #insdie host node 
+          path: /var/log  #by this hostpath it will directly look/connect into /var/log   
