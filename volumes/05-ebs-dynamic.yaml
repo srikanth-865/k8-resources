@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: PersistentVolumeClaim  
+metadata:
+  name: ebs-dynamic 
+spec:
+  accessModes:
+    - ReadWriteOnce 
+  storageClassName: roboshop-ebs #as we give our storage class name roboshop here we are using here 
+  resources:
+    requests:
+      storage: 6Gi #for claiming the storage as we give dynamically 6gi and here PV is not there as its dynamic volume
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ebs-dynamic
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /usr/share/nginx/html #we are mounting here the volume to store our nginx data here
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: ebs-dynamic   #we gave our pvc storage here to our pod  
+
+
+
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl apply -f 05-ebs-dynamic
+persistentvolumeclaim/ebs-dynamic created
+pod/ebs-dynamic created
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+ebs-dynamic   1/1     Running   0          12s
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl exec -it ebs-dynamic -- bash
+root@ebs-dynamic:/# cd /usr/share/nginx/html/
+root@ebs-dynamic:/usr/share/nginx/html# ls -l
+total 16
+drwx------ 2 root root 16384 Oct  1 06:26 lost+found
+root@ebs-dynamic:/usr/share/nginx/html# exit
+exit
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl get sc
+NAME           PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+gp2            kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  23m
+roboshop-ebs   ebs.csi.aws.com         Retain          WaitForFirstConsumer   false                  9m29s
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl exec -it ebs-dynamic -- bash
+root@ebs-dynamic:/# cd usr/share/nginx/html
+root@ebs-dynamic:/usr/share/nginx/html# ls
+lost+found
+root@ebs-dynamic:/usr/share/nginx/html# ls -l
+total 16
+drwx------ 2 root root 16384 Oct  1 06:26 lost+found
+root@ebs-dynamic:/usr/share/nginx/html# touch sk.html
+root@ebs-dynamic:/usr/share/nginx/html# ls -l
+total 16
+drwx------  2 root root 16384 Oct  1 06:26 lost+found
+-rw-r--r--. 1 root root     0 Oct  1 06:31 sk.html
+root@ebs-dynamic:/usr/share/nginx/html# exit
+exit
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl delete pod ebs-dynamic
+pod "ebs-dynamic" deleted from default namespace
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl apply -f 05-ebs-dynamic
+persistentvolumeclaim/ebs-dynamic unchanged
+pod/ebs-dynamic created
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl exec -it ebs-dynamic -- bash
+error: Internal error occurred: unable to upgrade connection: container not found ("nginx")
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+ebs-dynamic   1/1     Running   0          19s
+
+54.91.30.234 | 172.31.28.159 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+[ ec2-user@ip-172-31-28-159 ~/k8-resources/volumes ]$ kubectl exec -it ebs-dynamic -- bash
+root@ebs-dynamic:/# cd /usr/share/nginx/html
+root@ebs-dynamic:/usr/share/nginx/html# ls
+lost+found  sk.html
+root@ebs-dynamic:/usr/share/nginx/html#
