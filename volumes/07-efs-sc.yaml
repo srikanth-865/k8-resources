@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+parameters:
+  provisioningMode: efs-ap
+  fileSystemId: fs-0624b15c7bb7f4ad5  #we can give our new created EFS volume id here
+  directoryPerms: "700"
+  basePath: "/roboshop" # optional

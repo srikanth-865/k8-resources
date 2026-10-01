@@ -42,3 +42,43 @@ spec:
   - name: persistent-storage
     persistentVolumeClaim:
       claimName: efs-static
+
+###   OUTPUT  ###################################
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 06-efs-static.yaml
+# persistentvolume/efs-static created
+# persistentvolumeclaim/efs-static created
+# pod/efs-static created
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl get pod
+# NAME         READY   STATUS    RESTARTS   AGE
+# efs-static   1/1     Running   0          6s
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl get pvc
+# NAME         STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+# efs-static   Bound    efs-static   5Gi        RWX                           <unset>                 16s
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl exec -it efs-static -- bash
+# root@efs-static:/# cd /usr/share/nginx/html/
+# root@efs-static:/usr/share/nginx/html# touch sk.html
+# root@efs-static:/usr/share/nginx/html# exit
+# exit
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl delete pod efs-static
+# pod "efs-static" deleted from default namespace
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 06-efs-static.yaml
+# persistentvolume/efs-static configured
+# persistentvolumeclaim/efs-static unchanged
+# pod/efs-static created
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl exec -it efs-static -- bash
+# root@efs-static:/# cd /usr/share/nginx/html/
+# root@efs-static:/usr/share/nginx/html# ls
+# sk.html
+# root@efs-static:/usr/share/nginx/html#
