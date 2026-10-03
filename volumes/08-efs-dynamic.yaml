@@ -25,3 +25,89 @@ spec:
     - name: persistent-storage
       persistentVolumeClaim:
         claimName: efs-dynamic
+
+
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 07-efs-sc.yaml
+# storageclass.storage.k8s.io/efs-sc created
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl get sc
+# NAME     PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+# efs-sc   efs.csi.aws.com         Delete          Immediate              false                  6s
+# gp2      kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  39m
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ git pull
+# remote: Enumerating objects: 6, done.
+# remote: Counting objects: 100% (6/6), done.
+# remote: Compressing objects: 100% (2/2), done.
+# remote: Total 4 (delta 2), reused 4 (delta 2), pack-reused 0 (from 0)
+# Unpacking objects: 100% (4/4), 533 bytes | 533.00 KiB/s, done.
+# From https://github.com/srikanth-865/k8-resources
+#    456bfaf..870d46f  main       -> origin/main
+# Updating 456bfaf..870d46f
+# Fast-forward
+#  volumes/08-efs-dynamic.yaml | 27 +++++++++++++++++++++++++++
+#  1 file changed, 27 insertions(+)
+#  create mode 100644 volumes/08-efs-dynamic.yaml
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 07-efs-dynamic.yaml
+# error: the path "07-efs-dynamic.yaml" does not exist
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 08-efs-dynamic.yaml
+# persistentvolumeclaim/efs-dynamic created
+# pod/efs-dynamic created
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl get pv
+# NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+# pvc-ff5f363c-e704-4cd4-bd47-fa4f4541facd   5Gi        RWX            Delete           Bound    default/efs-dynamic   efs-sc         <unset>                          24s
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl exec -it efs-dynamic -- bash
+# root@efs-dynamic:/# ls -l
+# total 8
+# lrwxrwxrwx.   1 root  root     7 Jul 17 17:05 bin -> usr/bin
+# drwxr-xr-x.   2 root  root     6 Jul 17 17:05 boot
+# drwx------.   2 50000 50000 6144 Oct  1 08:02 data
+# drwxr-xr-x.   5 root  root   360 Oct  1 08:02 dev
+# drwxr-xr-x.   1 root  root    41 Sep 19 00:20 docker-entrypoint.d
+# -rwxr-xr-x.   1 root  root  1620 Sep 19 00:20 docker-entrypoint.sh
+# drwxr-xr-x.   1 root  root    32 Oct  1 08:02 etc
+# drwxr-xr-x.   2 root  root     6 Jul 17 17:05 home
+# lrwxrwxrwx.   1 root  root     7 Jul 17 17:05 lib -> usr/lib
+# lrwxrwxrwx.   1 root  root     9 Jul 17 17:05 lib64 -> usr/lib64
+# drwxr-xr-x.   2 root  root     6 Sep 18 00:00 media
+# drwxr-xr-x.   2 root  root     6 Sep 18 00:00 mnt
+# drwxr-xr-x.   2 root  root     6 Sep 18 00:00 opt
+# dr-xr-xr-x. 142 root  root     0 Oct  1 08:02 proc
+# drwx------.   2 root  root    37 Sep 18 00:00 root
+# drwxr-xr-x.   1 root  root    38 Oct  1 08:02 run
+# lrwxrwxrwx.   1 root  root     8 Jul 17 17:05 sbin -> usr/sbin
+# drwxr-xr-x.   2 root  root     6 Sep 18 00:00 srv
+# dr-xr-xr-x.  13 root  root     0 Oct  1 07:21 sys
+# drwxrwxrwt.   2 root  root     6 Sep 18 00:00 tmp
+# drwxr-xr-x.   1 root  root    66 Sep 18 00:00 usr
+# drwxr-xr-x.   1 root  root    19 Sep 18 00:00 var
+# root@efs-dynamic:/# cd data
+# root@efs-dynamic:/data# touch sk.html
+# root@efs-dynamic:/data# exit
+# exit
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl delete pod efs-dynamic
+# pod "efs-dynamic" deleted from default namespace
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl apply -f 08-efs-dynamic.yaml
+# persistentvolumeclaim/efs-dynamic unchanged
+# pod/efs-dynamic created
+
+# 13.218.107.120 | 172.31.16.193 | t3.micro | https://github.com/srikanth-865/k8-resources.git
+# [ ec2-user@ip-172-31-16-193 ~/k8-resources/volumes ]$ kubectl exec -it efs-dynamic -- bash
+# root@efs-dynamic:/# cd data
+# root@efs-dynamic:/data# ls
+# sk.html
+# root@efs-dynamic:/data#

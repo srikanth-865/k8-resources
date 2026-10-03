@@ -7,4 +7,32 @@ parameters:
   provisioningMode: efs-ap
   fileSystemId: fs-0624b15c7bb7f4ad5  #we can give our new created EFS volume id here
   directoryPerms: "700"
-  basePath: "/roboshop" # optional
+  basePath: "/roboshop" # optional like using differenet directory in our projects
+
+###Basepath means #########################
+#   basePath, it is used to tell the EFS CSI driver where inside the EFS filesystem 
+#     to create the directories for our Kubernetes workloads.
+
+#   Think of EFS like one big shared disk
+
+# Suppose your EFS is:
+
+# EFS
+# fs-0624b15c7bb7f4ad5
+# │
+# └── /roboshop
+
+# When Kubernetes dynamically creates storage, the EFS CSI driver can create directories underneath /roboshop.
+
+# For example:
+# EFS
+# └── roboshop
+#     ├── pvc-12345  pvc-ff5f363c-e704-4cd4-bd47-fa4f4541facd   5Gi  RWX   Delete   Bound    default/efs-dynamic   efs-sc  <unset>                          24s
+#     ├── pvc-67890
+#     └── pvc-abcde
+# Each PVC can get its own directory/access point.
+# basePath: "/roboshop" tells the CSI driver:
+
+# "For this StorageClass, keep the dynamically created directories under /roboshop
+
+###mainly for organization and controlling where the EFS access-point directories are created.
